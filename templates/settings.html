@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Settings</h2>
+  <form method="post" action="{{ url_for('settings_save') }}" class="grid grid-3">
+    <div class="field">
+      <label><input type="checkbox" name="warn_repeats" {% if warn_repeats %}checked{% endif %}> Warn if same teacher repeatedly chosen (last 5 days)</label>
+    </div>
+    <label>Warn threshold
+      <input type="number" name="warn_threshold" min="1" value="{{ warn_threshold }}">
+    </label>
+    <label>School off days (comma-separated)
+      <input type="text" name="off_days" value="{{ off_days }}">
+    </label>
+    <div class="full">
+      <strong>Schedule file:</strong> {{ schedule_path }}
+    </div>
+    <div class="actions"><button type="submit">Save</button></div>
+  </form>
+
+  <h3>Periods</h3>
+  <div class="table-wrap small">
+    <table>
+      <thead><tr><th>Code</th><th>Time</th></tr></thead>
+      <tbody>
+        {% for p in periods %}<tr><td>{{ p.code }}</td><td>{{ p.time }}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

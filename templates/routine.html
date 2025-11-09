@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Routine</h2>
+  <form method="get" action="{{ url_for('routine') }}" class="grid grid-4">
+    <label>Day
+      <select name="day">
+        {% for d in days %}
+        <option value="{{ d }}" {% if d==selected_day %}selected{% endif %}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <div class="actions">
+      <button type="submit">Show</button>
+    </div>
+  </form>
+
+  <div class="meta">Showing routine for <strong>{{ selected_day }}</strong>. Empty means FREE.</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Teacher</th>
+          {% for p in periods %}
+          <th>{{ p.code }}<br><span style="opacity:.7; font-weight:400; font-size:12px;">{{ p.time }}</span></th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.teacher }}</td>
+          {% for v in r.vals %}
+          <td>{{ v if v else 'FREE' }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Find Substitute</h2>
+  <form method="get" action="{{ url_for('index') }}" class="grid grid-4">
+    <label>Day
+      <select name="day">
+        {% for d in days %}
+        <option value="{{ d }}" {% if d==selected_day %}selected{% endif %}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>Absent Teacher
+      <select name="absent">
+        {% for t in teachers %}
+        <option value="{{ t }}" {% if t==selected_absent %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>Period
+      <select name="period">
+        <option value="">-- Select --</option>
+        {% for p in periods_for_absent %}
+        <option value="{{ p.code }}" {% if p.code==selected_period %}selected{% endif %}>{{ p.code }} ({{ p.time }})</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <div class="actions">
+      <button type="submit">Find Available</button>
+    </div>
+  </form>
+
+  {% if selected_period %}
+  <div class="meta">Class to be covered: <strong>{{ class_code or "Unknown" }}</strong></div>
+  <div class="meta">Classes taught by {{ selected_absent }} on {{ selected_day }}: <strong>{{ absent_classes_today|join(', ') if absent_classes_today else 'None' }}</strong></div>
+  {% endif %}
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Teacher</th>
+          <th>Teaches</th>
+          <th>Status</th>
+          <th>Class Fit</th>
+          <th>Load</th>
+          <th>Indicators</th>
+          <th>Assign</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in avail %}
+        <tr>
+          <td>{{ r.teacher }}</td>
+          <td>{{ r.teaches|join(', ') }}</td>
+          <td>FREE</td>
+          <td><span class="{{ r.fit|badge }}">{{ r.fit }}</span></td>
+          <td>{{ r.load }}</td>
+          <td>
+            {% set indicators = [] %}
+            {% if r.chosen_yesterday %}{% set _ = indicators.append("chosen yesterday") %}{% endif %}
+            {% set _ = indicators.append("chosen previously: " ~ r.prior_count) %}
+            {{ indicators|join(", ") }}
+          </td>
+          <td>
+            <form method="post" action="{{ url_for('assign') }}">
+              <input type="hidden" name="day" value="{{ selected_day }}">
+              <input type="hidden" name="absent" value="{{ selected_absent }}">
+              <input type="hidden" name="period" value="{{ selected_period }}">
+              <input type="hidden" name="assigned" value="{{ r.teacher }}">
+              <input type="text" name="notes" placeholder="Notes (optional)" />
+              <button type="submit">Assign</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

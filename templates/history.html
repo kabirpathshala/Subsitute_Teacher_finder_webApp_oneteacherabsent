@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Assignment History</h2>
+  <form method="get" action="{{ url_for('history') }}" class="grid grid-6">
+    <label>From <input type="date" name="from" value="{{ q['from'] }}"></label>
+    <label>To <input type="date" name="to" value="{{ q['to'] }}"></label>
+    <label>Teacher
+      <select name="teacher">
+        <option>Any</option>
+        {% for t in teachers %}<option {% if q['teacher']==t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Absent
+      <select name="absent">
+        <option>Any</option>
+        {% for t in teachers %}<option {% if q['absent']==t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Day
+      <select name="day">
+        <option>Any</option>
+        {% for d in days %}<option {% if q['day']==d %}selected{% endif %}>{{ d }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Period
+      <select name="period">
+        <option>Any</option>
+        {% for code in period_codes %}<option {% if q['period']==code %}selected{% endif %}>{{ code }}</option>{% endfor %}
+      </select>
+    </label>
+    <div class="actions"><button type="submit">Search</button></div>
+  </form>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Date</th><th>Day</th><th>Period</th><th>Time</th>
+          <th>Absent</th><th>Assigned</th><th>Class</th><th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r[0] }}</td>
+          <td>{{ r[1] }}</td>
+          <td>{{ r[2] }}</td>
+          <td>{{ r[3] }}</td>
+          <td>{{ r[4] }}</td>
+          <td>{{ r[5] }}</td>
+          <td>{{ r[6] }}</td>
+          <td>{{ r[7] }}</td>
+          <td>{{ r[8] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
