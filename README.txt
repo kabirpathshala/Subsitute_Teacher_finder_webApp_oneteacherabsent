@@ -1,6 +1,6 @@
 # Substitute Finder - EMRS (Web)
 
-A Flask web version of your desktop app. Drop `teachers_schedule.json` in the same folder,
+A Flask web version of desktop app. Drop `teachers_schedule.json` in the same folder,
 run the server, and manage substitute assignments in the browser. Exports a `substitutions.csv` too.
 
 ## Quickstart
